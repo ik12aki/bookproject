@@ -1,0 +1,29 @@
+databases:
+  - name: akidb
+    databaseName: akidb
+    user: akidb
+    region: singapore
+    plan: free
+
+services:
+  - type: web
+    name: akidb
+    env: python
+    region: singapore
+    plan: free
+    branch: main
+    healthCheckPath: /
+    buildCommand: "./build.sh"
+    startCommand: "bookproject.wsgi --log-file -"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mysite
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+
+
+    autoDeploy: true
